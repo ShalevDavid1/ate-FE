@@ -1,35 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import Login from "./components/Login";
+import { useState } from "react";
+import Main from "./components/Main";
 
-function App() {
-  const [count, setCount] = useState(0)
+
+const clientId = "test"
+// const clientId = "566819812037-jp6u5v129884j12e9ls5vuhiud77udjp.apps.googleusercontent.com"
+
+
+const App = () => {
+  const [user, setUser] = useState<UserInfo | null>({
+    "email": "shalevd2014@gmail.com",
+    "name": "שליו דוד",
+    "picture": "https://lh3.googleusercontent.com/a/ACg8ocKa_kPeJwtl6JuJ_ptacDrMoW49l75LPj1warrWwjZ64CVM4w=s96-c"
+});
+
+  const handleLogin = (userData: UserInfo) => {
+    console.log(userData);
+    setUser(userData);
+  };
+
+  const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+    return user ? children : <Navigate to="/login" />;
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <GoogleOAuthProvider clientId={clientId}>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
 
-export default App
+          {/* Protected Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                { user ? <Main userInfo={user} /> : null}
+              </PrivateRoute>
+            }
+          />
+
+          {/* Default Route */}
+          <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
+        </Routes>
+      </Router>
+    </GoogleOAuthProvider>
+  );
+};
+
+export default App;
