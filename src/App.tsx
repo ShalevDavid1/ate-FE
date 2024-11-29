@@ -3,10 +3,10 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import Login from "./components/Login";
 import { useState } from "react";
 import Main from "./components/Main";
+import About from "./components/About";
 
 
 const clientId = "test"
-// const clientId = "566819812037-jp6u5v129884j12e9ls5vuhiud77udjp.apps.googleusercontent.com"
 
 
 const App = () => {
@@ -31,6 +31,7 @@ const App = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/about" element={<About />} />
 
           {/* Protected Routes */}
           <Route
