@@ -11,7 +11,7 @@ const clientId = "test"
 
 const App = () => {
   const [user, setUser] = useState<UserInfo | null>({
-    "email": "shalevd2014@gmail.com",
+    "email": "shalevd20144@gmail.com",
     "name": "שליו דוד",
     "picture": "https://lh3.googleusercontent.com/a/ACg8ocKa_kPeJwtl6JuJ_ptacDrMoW49l75LPj1warrWwjZ64CVM4w=s96-c"
 });

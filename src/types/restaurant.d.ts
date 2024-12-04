@@ -1,16 +1,18 @@
-interface RestrauntRate {
-    food_rating: number;
-    price_rating: number;
-    service_rating: number;
-    vibe_rating: number;
+interface RestaurantRating {
+    foodRating: number;
+    priceRating: number;
+    serviceRating: number;
+    vibeRating: number;
 }
 
-interface Restaurant {
-    id: number;
+interface AddNewRestaurant {
     name: string;
     lat: number;
     lng: number;
-    formatted_address: string;
-    icon: str;
-    restrauntRate: ?RestrauntRate;
+    formattedAddress: string;
+    rating: RestaurantRating;
+}
+
+interface Restaurant extends AddNewRestaurant {
+    id: number;
 }
