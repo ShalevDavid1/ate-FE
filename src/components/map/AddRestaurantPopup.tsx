@@ -5,9 +5,10 @@ import {
     DialogContent,
     TextField,
     Button,
-    DialogActions,
     Box,
-    Rating
+    Rating,
+    Stack,
+    Typography
 } from "@mui/material";
 
 export interface AddRestaurantInterface {
@@ -51,68 +52,81 @@ const AddRestaurantPopup = ({ open, onClose, onSubmit, location }: AddRestaurant
         resetForm();
         onClose();
     };
-
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
             <DialogTitle>Add New Restaurant</DialogTitle>
             <DialogContent>
-                <Box display="flex" flexDirection="column" gap={3}>
+                <Stack spacing={0.8}>
                     <TextField
                         label="Restaurant Name"
                         variant="outlined"
+                        fullWidth
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        fullWidth
                     />
                     <TextField
-                        label="Formatted Adress"
+                        label="Formatted Address"
                         variant="outlined"
+                        fullWidth
                         value={formattedAddress}
                         onChange={(e) => setFormattedAddress(e.target.value)}
-                        fullWidth
                     />
+
                     <Box>
-                        <label>Food Rating</label>
+                        <Typography variant="subtitle1" gutterBottom>
+                            Food Rating
+                        </Typography>
                         <Rating
-                            name="simple-controlled"
+                            name="food-rating"
                             value={foodRating}
-                            onChange={(_e, value) => setFoodRating(value as number)}
+                            onChange={(_, newValue) => setFoodRating(newValue || 3)}
                         />
                     </Box>
+
                     <Box>
-                        <label>Price Rating</label>
+                        <Typography variant="subtitle1" gutterBottom>
+                            Price Rating
+                        </Typography>
                         <Rating
-                            name="simple-controlled"
+                            name="price-rating"
                             value={priceRating}
-                            onChange={(_e, value) => setPriceRating(value as number)}
+                            onChange={(_, newValue) => setPriceRating(newValue || 3)}
                         />
                     </Box>
+
                     <Box>
-                        <label>Service Rating</label>
+                        <Typography variant="subtitle1" gutterBottom>
+                            Service Rating
+                        </Typography>
                         <Rating
-                            name="simple-controlled"
+                            name="service-rating"
                             value={serviceRating}
-                            onChange={(_e, value) => setServiceRating(value as number)}
+                            onChange={(_, newValue) => setServiceRating(newValue || 3)}
                         />
                     </Box>
+
                     <Box>
-                        <label>Vibe Rating</label>
+                        <Typography variant="subtitle1" gutterBottom>
+                            Vibe Rating
+                        </Typography>
                         <Rating
-                            name="simple-controlled"
+                            name="vibe-rating"
                             value={vibeRating}
-                            onChange={(_e, value) => setVibeRating(value as number)}
+                            onChange={(_, newValue) => setVibeRating(newValue || 3)}
                         />
                     </Box>
-                </Box>
+
+                    {/* Action Buttons */}
+                    <Stack direction="row" justifyContent="space-between" sx={{ mt: 2 }}>
+                        <Button variant="text" color="secondary" onClick={onClose}>
+                            Cancel
+                        </Button>
+                        <Button variant="contained" color="primary" onClick={handleSubmit}>
+                            Add
+                        </Button>
+                    </Stack>
+                </Stack>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} color="secondary">
-                    Cancel
-                </Button>
-                <Button onClick={handleSubmit} color="primary">
-                    Add
-                </Button>
-            </DialogActions>
         </Dialog>
     );
 };

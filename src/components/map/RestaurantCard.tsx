@@ -1,5 +1,5 @@
-import { Box, Typography, Button, Rating } from '@mui/material';
-// import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Typography, Button, Stack } from '@mui/material';
+import StarIcon from "@mui/icons-material/Star";
 
 interface Props {
     restaurant: Restaurant;
@@ -8,47 +8,73 @@ interface Props {
 }
 
 const RestaurantCard = ({ restaurant, averageRating, handleDeleteRestaurant }: Props) => {
-    const renderStars = (value: number) => (
-        <Rating value={value} precision={0.5} readOnly size="small" />
-    );
+    const renderStars = (rating: number) => {
+        return (
+            <Box>
+                {Array.from({ length: 5 }, (_, index) => (
+                    <StarIcon
+                        key={index}
+                        sx={{
+                            color: index < rating ? "#FFD700" : "#E0E0E0",
+                            fontSize: "20px",
+                        }}
+                    />
+                ))}
+            </Box>
+        );
+    };
 
     return (
-        <Box>
-            <Typography variant="h6" gutterBottom>
+        <Box
+            sx={{
+                padding: "16px",
+                borderRadius: "8px",
+                maxWidth: "300px",
+            }}
+        >
+            <Typography
+                variant="h6"
+                sx={{
+                    fontFamily: "'Roboto', sans-serif",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    marginBottom: "16px",
+                }}
+            >
                 {restaurant.name}
             </Typography>
 
-            <Typography variant="body1">
-                <strong>Total Rating:</strong> {renderStars(averageRating)}
-            </Typography>
+            <Stack spacing={1}>
+                {[
+                    { label: "Total Rating", rating: averageRating },
+                    { label: "Food Rating", rating: restaurant.rating.foodRating },
+                    { label: "Price Rating", rating: restaurant.rating.priceRating },
+                    { label: "Service Rating", rating: restaurant.rating.serviceRating },
+                    { label: "Vibe Rating", rating: restaurant.rating.vibeRating },
+                ].map(({ label, rating }, index) => (
+                    <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        key={index}
+                    >
+                        <Typography variant="body1" sx={{ fontFamily: "'Roboto', sans-serif" }}>
+                            <strong>{label}:</strong>
+                        </Typography>
+                        {renderStars(rating)}
+                    </Stack>
+                ))}
+            </Stack>
 
-            <Typography variant="body1">
-                <strong>Food Rating:</strong> {renderStars(restaurant.rating.foodRating)}
-            </Typography>
-
-            <Typography variant="body1">
-                <strong>Price Rating:</strong> {renderStars(restaurant.rating.priceRating)}
-            </Typography>
-
-            <Typography variant="body1">
-                <strong>Service Rating:</strong> {renderStars(restaurant.rating.serviceRating)}
-            </Typography>
-
-            <Typography variant="body1">
-                <strong>Vibe Rating:</strong> {renderStars(restaurant.rating.vibeRating)}
-            </Typography>
             <Button
                 variant="contained"
                 color="error"
-                // startIcon={<DeleteIcon />}
-                size="small"
-                sx={{
-                    mt: 2,
-                    textTransform: 'none',
-                    width: '100%',
-                    maxWidth: '200px',
-                }}
                 onClick={() => handleDeleteRestaurant(restaurant.id)}
+                sx={{
+                    marginTop: "16px",
+                    width: "100%",
+                    fontFamily: "'Roboto', sans-serif",
+                }}
             >
                 Delete Restaurant
             </Button>
