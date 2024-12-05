@@ -15,12 +15,43 @@ interface MainProps {
 
 const Main = ({ userInfo }: MainProps) => {
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+    const [friendships, setFriendships] = useState<FriendInfo[]>([]);
+    const [friendsRestaurants, setFriendsRestaurants] = useState<FriendRestaurant[]>([]);
+    const [selectedFriendsRestaurants, setSelectedFriendsRestaurants] = useState<number[]>([])
     const [toast, setToast] = useState({
         open: false,
         message: "",
         severity: "success" as AlertColor,
     });
 
+    useEffect(() => {
+        console.log(friendsRestaurants);
+    }, [friendsRestaurants])
+
+    const handleAddOrRemoveFriendRestaurant = async (friendInfo: FriendInfo) => {
+        if (selectedFriendsRestaurants.includes(friendInfo.id)) {
+            // remove
+            setFriendsRestaurants((restaurants) => restaurants.filter(restaurant => restaurant.friend.id !== friendInfo.id))
+            setSelectedFriendsRestaurants((ids) => ids.filter((id) => id !== friendInfo.id))
+        }
+        else {
+            // add
+            try {
+                const response = await DBAPI.getRestaurantsById(friendInfo.id)
+                const restaurants = toCamelCase(response.data)
+                const friendRestaurants = restaurants.map((restaurant: Restaurant) => {
+                    return {
+                        ...restaurant,
+                        friend: friendInfo
+                    }
+                })
+                setFriendsRestaurants((restaurants) => [...restaurants, ...friendRestaurants]);
+                setSelectedFriendsRestaurants((ids) => [...ids, friendInfo.id])
+            } catch (error) {
+                console.error("Error fetching restaurants:", error);
+            }
+        }
+    }
     const handleToastClose = () => { setToast((prevState) => ({ ...prevState, open: false })); };
 
     const toastError = (message: string) => { setToast({ open: true, message: message, severity: "error", }); }
@@ -82,17 +113,49 @@ const Main = ({ userInfo }: MainProps) => {
     useEffect(() => {
         const fetchRestaurants = async () => {
             try {
-                const response = await DBAPI.getRestaurants(userInfo.email)
+                const response = await DBAPI.getRestaurantsByEmail(userInfo.email)
                 setRestaurants(toCamelCase(response.data));
             } catch (error) {
                 console.error("Error fetching restaurants:", error);
             }
         };
+        const fetchFriendships = async () => {
+            try {
+                const response = await DBAPI.getFriendships(userInfo.email)
+                setFriendships(response.data);
+            } catch (error) {
+                console.error("Error fetching friendships:", error);
+                toastError("Error while fetching friendships")
+            }
+        };
 
+        fetchFriendships();
         fetchRestaurants();
     }, []);
 
     console.log(userInfo.email);
+
+    const addFriendship = async (friendship: FriendInfo) => {
+        setFriendships(friendships => [...friendships, friendship])
+    }
+
+    const handleAddFriendship = async (friendEmail: string) => {
+        try {
+            const response = await DBAPI.AddFriendship(userInfo.email, friendEmail);
+            if (response.status < 200 || response.status >= 300) { throw new Error(`Server Error`); }
+            if (response.data.error) { throw new Error(response.data.error as string); }
+            console.log(response.data);
+
+            addFriendship(response.data)
+        } catch (error: any) {
+            if (error.response) {
+                // Backend returned an error
+                toastError(error.response.data.detail || "An error occurred");
+            } else {
+                toastError("Unable to connect to the server. Try again later.");
+            }
+        }
+    }
 
     return (
         <div className="app-container">
@@ -103,11 +166,17 @@ const Main = ({ userInfo }: MainProps) => {
                 onClose={handleToastClose}
             />
             <div className="sidebar-container">
-                <Sidebar />
+                <Sidebar
+                    friendships={friendships}
+                    selectedFriendsRestaurants={selectedFriendsRestaurants}
+                    handleAddOrRemoveFriendRestaurant={handleAddOrRemoveFriendRestaurant}
+                    handleAddFriendship={handleAddFriendship}
+                />
             </div>
             <div className="map-container">
                 <MapComponent
                     restaurants={restaurants}
+                    friendsRestaurants={friendsRestaurants}
                     handleAddRestaurant={handleAddRestaurant}
                     handleDeleteRestaurant={handleDeleteRestaurant}
                 />

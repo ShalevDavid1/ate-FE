@@ -16,3 +16,7 @@ interface AddNewRestaurant {
 interface Restaurant extends AddNewRestaurant {
     id: number;
 }
+
+interface FriendRestaurant extends Restaurant {
+    friend: FriendInfo;
+}

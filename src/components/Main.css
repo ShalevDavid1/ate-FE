@@ -5,7 +5,6 @@
 }
 
 .sidebar-container {
-    flex: 0 0 15%;
     background-color: #1e1e2f;
     color: white;
     overflow-y: auto;

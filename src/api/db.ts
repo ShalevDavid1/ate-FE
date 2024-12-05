@@ -8,10 +8,21 @@ axiosRetry(api, { retries: 3 });
 
 class DBAPI {
 
-    public static getRestaurants = (email: string) => {
+    public static getRestaurantsByEmail = (email: string) => {
         return api.get(`/restaurants?email=${email}`);
     }
 
+    public static getRestaurantsById = (id: number) => {
+        return api.get(`/restaurants?user_id=${id}`);
+    }
+
+    public static getFriendships = (email: string) => {
+        return api.get(`/friendships?email=${email}`);
+    }
+
+    public static AddFriendship = (userEmail: string, FriendEmail: string) => {
+        return api.post(`/friendships/add_friendship?email=${userEmail}&friend_email=${FriendEmail}`);
+    }
 
     public static AddRatedRestaurant = (userEmail: string, restaurantAndRating: AddNewRestaurant) => {
         const ratedRestaurant = toSnakeCase(restaurantAndRating)

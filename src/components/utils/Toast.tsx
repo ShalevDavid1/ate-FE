@@ -12,7 +12,7 @@ const Toast = ({ open, message, severity, onClose, closeAfter }: ToastProps) => 
     return (
         <Snackbar
             open={open}
-            autoHideDuration={closeAfter ?? 1000} // 1 seconds as default
+            autoHideDuration={closeAfter ?? 2000} // 2 seconds as default
             onClose={onClose}
             anchorOrigin={{ vertical: "top", horizontal: "right" }} // Positioned at top-right
         >

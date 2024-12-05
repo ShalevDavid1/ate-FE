@@ -4,10 +4,11 @@ import StarIcon from "@mui/icons-material/Star";
 interface Props {
     restaurant: Restaurant;
     averageRating: number;
-    handleDeleteRestaurant: (restaurantId: number) => void;
+    handleDeleteRestaurant?: (restaurantId: number) => void;
+    rateOwner?: string;
 }
 
-const RestaurantCard = ({ restaurant, averageRating, handleDeleteRestaurant }: Props) => {
+const RestaurantCard = ({ restaurant, averageRating, handleDeleteRestaurant, rateOwner }: Props) => {
     const renderStars = (rating: number) => {
         return (
             <Box>
@@ -66,7 +67,16 @@ const RestaurantCard = ({ restaurant, averageRating, handleDeleteRestaurant }: P
                 ))}
             </Stack>
 
-            <Button
+            {rateOwner && <Typography
+                sx={{
+                    fontFamily: "'Roboto', sans-serif",
+                    marginBottom: "16px",
+                }}
+            >
+                Rated By: {rateOwner}
+            </Typography>}
+
+            {handleDeleteRestaurant && <Button
                 variant="contained"
                 color="error"
                 onClick={() => handleDeleteRestaurant(restaurant.id)}
@@ -77,7 +87,7 @@ const RestaurantCard = ({ restaurant, averageRating, handleDeleteRestaurant }: P
                 }}
             >
                 Delete Restaurant
-            </Button>
+            </Button>}
         </Box>
     );
 };

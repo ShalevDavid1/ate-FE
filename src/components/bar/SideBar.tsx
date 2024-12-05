@@ -1,9 +1,18 @@
 import "./Sidebar.css";
 
+import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from "react-router-dom";
+import FriendsAccordion from "./FriendsAccordion";
+import DBAPI from "../../api/db";
 
+interface SideBarProps {
+    friendships: FriendInfo[];
+    selectedFriendsRestaurants: number[];
+    handleAddOrRemoveFriendRestaurant: (friendInfo: FriendInfo) => void;
+    handleAddFriendship: (friendEmail: string) => void;
+}
 
-const Sidebar = () => {
+const Sidebar = ({ friendships, selectedFriendsRestaurants, handleAddOrRemoveFriendRestaurant, handleAddFriendship }: SideBarProps) => {
 
     const navigate = useNavigate();
 
@@ -11,19 +20,27 @@ const Sidebar = () => {
         navigate("/about")
     }
 
-    const handleOptionClick = (option: string) => {
-        console.log(`${option} clicked`);
-        // Add navigation logic here if needed
-    };
-
     return (
-        <div className="sidebar">
-            <div className="sidebar-title">ATE</div>
-            <ul className="sidebar-options">
-                <li onClick={() => handleOptionClick("Friends")}>Friends</li>
-                <li onClick={handleAboutClick}>About</li>
-            </ul>
-        </div>
+        <Box sx={{ width: 250, backgroundColor: '#2C3E50', color: 'white', padding: 2, display: 'flex', flexDirection: 'column', direction: 'ltr' }}>
+            <Typography variant="h6" gutterBottom sx={{ textAlign: 'center', marginBottom: 4 }}>
+                ATE
+            </Typography>
+
+            <FriendsAccordion
+                friendships={friendships}
+                selectedFriendsRestaurants={selectedFriendsRestaurants}
+                handleAddOrRemoveFriendRestaurant={handleAddOrRemoveFriendRestaurant}
+                handleAddFriendship={handleAddFriendship}
+            />
+
+            <Button
+                variant="text"
+                sx={{ color: 'white', marginBottom: 2, textTransform: 'none' }}
+                onClick={handleAboutClick}
+            >
+                About
+            </Button>
+        </Box>
     );
 };
 

@@ -9,11 +9,12 @@ import RestaurantCard from "./RestaurantCard";
 
 interface MapComponentProps {
     restaurants: Restaurant[];
+    friendsRestaurants: FriendRestaurant[];
     handleAddRestaurant: (new_restaurant: AddRestaurantInterface) => void;
     handleDeleteRestaurant: (restaurantId: number) => void;
 }
 
-const MapComponent = ({ restaurants, handleAddRestaurant, handleDeleteRestaurant }: MapComponentProps) => {
+const MapComponent = ({ restaurants, friendsRestaurants, handleAddRestaurant, handleDeleteRestaurant }: MapComponentProps) => {
     console.log(restaurants);
 
     const [addRestaurantPopupOpen, setAddRestaurantPopupOpen] = useState(false);
@@ -75,10 +76,27 @@ const MapComponent = ({ restaurants, handleAddRestaurant, handleDeleteRestaurant
                         icon={createIcon(averageRating)}
                     >
                         <Popup>
-                            <RestaurantCard 
-                            restaurant={restaurant} 
-                            averageRating={averageRating}
-                            handleDeleteRestaurant={handleDeleteRestaurant}
+                            <RestaurantCard
+                                restaurant={restaurant}
+                                averageRating={averageRating}
+                                handleDeleteRestaurant={handleDeleteRestaurant}
+                            />
+                        </Popup>
+                    </Marker>
+                })}
+
+                {friendsRestaurants.map((friendRestaurant) => {
+                    const averageRating = calculateAverageRating(friendRestaurant.rating)
+                    return <Marker
+                        key={friendRestaurant.id}
+                        position={[friendRestaurant.lat, friendRestaurant.lng]}
+                        icon={createIcon(averageRating)}
+                    >
+                        <Popup>
+                            <RestaurantCard
+                                rateOwner={friendRestaurant.friend.username}
+                                restaurant={friendRestaurant}
+                                averageRating={averageRating}
                             />
                         </Popup>
                     </Marker>
