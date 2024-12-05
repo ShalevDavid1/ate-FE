@@ -1,9 +1,9 @@
 import "./Sidebar.css";
 
 import { Box, Typography, Button } from '@mui/material';
-import { useNavigate } from "react-router-dom";
 import FriendsAccordion from "./FriendsAccordion";
-import DBAPI from "../../api/db";
+import { useNavigate } from "react-router-dom";
+
 
 interface SideBarProps {
     friendships: FriendInfo[];

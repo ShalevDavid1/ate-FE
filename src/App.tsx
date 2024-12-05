@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import AboutPage from "./components/AboutPage";
 import Login from "./components/Login";
-import { useState } from "react";
 import Main from "./components/Main";
-import About from "./components/About";
+import { useState } from "react";
 
 
 const clientId = "test"
@@ -31,7 +31,7 @@ const App = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={<AboutPage />} />
 
           {/* Protected Routes */}
           <Route
