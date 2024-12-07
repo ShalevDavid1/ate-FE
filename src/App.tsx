@@ -4,21 +4,23 @@ import AboutPage from "./components/AboutPage";
 import Login from "./components/Login";
 import Main from "./components/Main";
 import { useState } from "react";
+import DBAPI from "./api/db";
 
 
-const clientId = "test"
+const clientId = import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID
 
 
 const App = () => {
-  const [user, setUser] = useState<UserInfo | null>({
-    "email": "shalevd2014@gmail.com",
-    "name": "שליו דוד",
-    "picture": "https://lh3.googleusercontent.com/a/ACg8ocKa_kPeJwtl6JuJ_ptacDrMoW49l75LPj1warrWwjZ64CVM4w=s96-c"
-});
+  const [user, setUser] = useState<UserInfo | null>(null);
 
-  const handleLogin = (userData: UserInfo) => {
-    console.log(userData);
-    setUser(userData);
+  const handleLogin = async (userData: UserInfo) => {
+    try {
+      const response = await DBAPI.addUserIfNotExists(userData);
+      setUser(userData)
+    }
+    catch {
+      alert("Failed to log in. Please try again.");
+    }
   };
 
   const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
@@ -38,7 +40,7 @@ const App = () => {
             path="/dashboard"
             element={
               <PrivateRoute>
-                { user ? <Main userInfo={user} /> : null}
+                {user ? <Main userInfo={user} /> : null}
               </PrivateRoute>
             }
           />

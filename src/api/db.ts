@@ -20,6 +20,13 @@ class DBAPI {
         return api.get(`/friendships?email=${email}`);
     }
 
+    public static addUserIfNotExists = (userInfo: UserInfo) => {
+        return api.post(`/users/add_user_if_not_exists`, {
+            "email": userInfo.email,
+            "username": userInfo.name
+        });
+    }
+
     public static AddFriendship = (userEmail: string, FriendEmail: string) => {
         return api.post(`/friendships/add_friendship?email=${userEmail}&friend_email=${FriendEmail}`);
     }

@@ -1,3 +1,4 @@
+import { Box, Container, Paper, Typography } from "@mui/material";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +10,11 @@ interface DecodedToken {
   picture: string;
 }
 
-const Login = ({ onLogin }: { onLogin: (user: any) => void }) => {
+const Login = ({ onLogin }: { onLogin: (user: UserInfo) => void }) => {
 
   const navigate = useNavigate();
 
-  const handleLoginSuccess = (credentialResponse: any) => {
+  const handleLoginSuccess = async (credentialResponse: any) => {
     const idToken = credentialResponse.credential;
     try {
       // Decode the ID token
@@ -29,7 +30,7 @@ const Login = ({ onLogin }: { onLogin: (user: any) => void }) => {
         picture: decodedToken.picture,
       };
       console.log("Authenticated User:", user);
-      onLogin(user)
+      await onLogin(user)
       navigate("/dashboard")
     } catch (error) {
       console.error("Failed to decode ID token:", error);
@@ -41,14 +42,49 @@ const Login = ({ onLogin }: { onLogin: (user: any) => void }) => {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Welcome to My App</h1>
-      <p>Sign in with your Google account to continue.</p>
-      <GoogleLogin
-        onSuccess={handleLoginSuccess}
-        onError={handleLoginError}
-      />
-    </div>
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#1c2533",
+      }}
+    >
+      <Container
+        maxWidth="xs"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Paper
+          elevation={3}
+          sx={{
+            padding: 4,
+            textAlign: "center",
+            borderRadius: "10px",
+            backgroundColor: "#2a3b4e",
+          }}
+        >
+          <Typography
+            variant="h4"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "#e57373" }}
+          >
+            Welcome to ATE
+          </Typography>
+          <Typography variant="body1" sx={{ color: "#fff", marginBottom: 3 }}>
+            Sign in with your Google account to continue.
+          </Typography>
+          <GoogleLogin
+            onSuccess={handleLoginSuccess}
+            onError={handleLoginError}
+          />
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 
