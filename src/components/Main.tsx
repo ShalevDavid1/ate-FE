@@ -6,8 +6,27 @@ import MapComponent from "./map/Map";
 import Sidebar from "./bar/SideBar";
 import Toast from "./utils/Toast";
 import DBAPI from "../api/db";
+import { styled } from "@mui/material/styles";
 
-import "./Main.css"
+// Layout styled components
+const AppContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    height: '100vh',
+    width: '100vw',
+    background: theme.palette.background.default,
+}));
+const SidebarContainer = styled('div')(({ theme }) => ({
+    flex: '0 0 250px',
+    height: '100%',
+    background: theme.palette.background.paper,
+    boxShadow: theme.shadows[2],
+    zIndex: 2,
+}));
+const MapContainerStyled = styled('div')(({ theme }) => ({
+    flex: 1,
+    height: '100%',
+    zIndex: 1,
+}));
 
 interface MainProps {
     userInfo: UserInfo;
@@ -158,30 +177,30 @@ const Main = ({ userInfo }: MainProps) => {
     }
 
     return (
-        <div className="app-container">
+        <AppContainer>
             <Toast
                 open={toast.open}
                 message={toast.message}
                 severity={toast.severity}
                 onClose={handleToastClose}
             />
-            <div className="sidebar-container">
+            <SidebarContainer>
                 <Sidebar
                     friendships={friendships}
                     selectedFriendsRestaurants={selectedFriendsRestaurants}
                     handleAddOrRemoveFriendRestaurant={handleAddOrRemoveFriendRestaurant}
                     handleAddFriendship={handleAddFriendship}
                 />
-            </div>
-            <div className="map-container">
+            </SidebarContainer>
+            <MapContainerStyled>
                 <MapComponent
                     restaurants={restaurants}
                     friendsRestaurants={friendsRestaurants}
                     handleAddRestaurant={handleAddRestaurant}
                     handleDeleteRestaurant={handleDeleteRestaurant}
                 />
-            </div>
-        </div>
+            </MapContainerStyled>
+        </AppContainer>
     );
 };
 

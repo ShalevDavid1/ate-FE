@@ -2,9 +2,10 @@ import "leaflet/dist/leaflet.css";
 
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import AddRestaurantPopup, { AddRestaurantInterface } from "./AddRestaurantPopup";
+import { styled, useTheme } from "@mui/material/styles";
+import RestaurantCard from "./RestaurantCard";
 import L, { DivIcon } from "leaflet";
 import { useState } from "react";
-import RestaurantCard from "./RestaurantCard";
 
 
 interface MapComponentProps {
@@ -14,7 +15,16 @@ interface MapComponentProps {
     handleDeleteRestaurant: (restaurantId: number) => void;
 }
 
+const StyledMapWrapper = styled('div')(({ theme }) => ({
+    height: 500,
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+        height: '100vh',
+    },
+}));
+
 const MapComponent = ({ restaurants, friendsRestaurants, handleAddRestaurant, handleDeleteRestaurant }: MapComponentProps) => {
+    const theme = useTheme();
     console.log(restaurants);
 
     const [addRestaurantPopupOpen, setAddRestaurantPopupOpen] = useState(false);
@@ -43,7 +53,7 @@ const MapComponent = ({ restaurants, friendsRestaurants, handleAddRestaurant, ha
     };
 
     const createIcon = (averageRating: number): DivIcon => {
-        const color = getColorForRating(averageRating)
+        const color = getColorForRating(averageRating);
         return L.divIcon({
             className: "custom-icon",
             html: `<div style="
@@ -51,20 +61,20 @@ const MapComponent = ({ restaurants, friendsRestaurants, handleAddRestaurant, ha
                 justify-content: center;
                 align-items: center;
                 background: ${color};
-                color: white;
-                font-weight: bold;
+                color: ${theme.palette.common.white};
+                font-weight: ${theme.typography.fontWeightBold};
                 font-size: 14px;
                 width: 30px;
                 height: 30px;
-                border-radius: 50%;
+                border-radius: ${theme.shape.borderRadius * 12}px;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
             ">${averageRating.toFixed(1)}</div>`,
         });
     };
 
     return (
-        <div style={{ height: "500px", width: "100%" }}>
-            <MapContainer center={[31.9461, 34.8516]} zoom={9} style={{ height: "100vh", width: "100%" }}>
+        <StyledMapWrapper>
+            <MapContainer center={[31.9461, 34.8516]} zoom={9} style={{ height: '100vh', width: '100%' }}>
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 <MapClickHandler />
 
@@ -112,7 +122,7 @@ const MapComponent = ({ restaurants, friendsRestaurants, handleAddRestaurant, ha
                 )}
 
             </MapContainer>
-        </div>
+        </StyledMapWrapper>
     );
 };
 

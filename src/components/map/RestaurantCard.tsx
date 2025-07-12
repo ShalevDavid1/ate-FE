@@ -1,5 +1,41 @@
 import { Box, Typography, Button, Stack } from '@mui/material';
 import StarIcon from "@mui/icons-material/Star";
+import { styled } from '@mui/material/styles';
+
+const StyledCard = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+    maxWidth: 300,
+}));
+
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    fontFamily: theme.typography.fontFamily,
+    fontWeight: theme.typography.fontWeightBold,
+    textAlign: 'center',
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledLabel = styled(Typography)(({ theme }) => ({
+    fontFamily: theme.typography.fontFamily,
+}));
+
+const StyledRatedBy = styled(Typography)(({ theme }) => ({
+    fontFamily: theme.typography.fontFamily,
+    marginBottom: theme.spacing(2),
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    width: '100%',
+    fontFamily: theme.typography.fontFamily,
+}));
+
+const StyledStarIcon = styled(StarIcon, {
+    shouldForwardProp: (prop) => prop !== 'active',
+})<{ active: boolean }>(({ theme, active }) => ({
+    color: active ? theme.palette.warning.main : theme.palette.grey[300],
+    fontSize: 20,
+}));
 
 interface Props {
     restaurant: Restaurant;
@@ -13,45 +49,25 @@ const RestaurantCard = ({ restaurant, averageRating, handleDeleteRestaurant, rat
         return (
             <Box>
                 {Array.from({ length: 5 }, (_, index) => (
-                    <StarIcon
-                        key={index}
-                        sx={{
-                            color: index < rating ? "#FFD700" : "#E0E0E0",
-                            fontSize: "20px",
-                        }}
-                    />
+                    <StyledStarIcon key={index} active={index < rating} />
                 ))}
             </Box>
         );
     };
 
     return (
-        <Box
-            sx={{
-                padding: "16px",
-                borderRadius: "8px",
-                maxWidth: "300px",
-            }}
-        >
-            <Typography
-                variant="h6"
-                sx={{
-                    fontFamily: "'Roboto', sans-serif",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    marginBottom: "16px",
-                }}
-            >
+        <StyledCard>
+            <StyledTitle variant="h6">
                 {restaurant.name}
-            </Typography>
+            </StyledTitle>
 
             <Stack spacing={1}>
-                {[
+                { [
                     { label: "Total Rating", rating: averageRating },
                     { label: "Food Rating", rating: restaurant.rating.foodRating },
                     { label: "Price Rating", rating: restaurant.rating.priceRating },
                     { label: "Service Rating", rating: restaurant.rating.serviceRating },
-                    { label: "Vibe Rating", rating: restaurant.rating.vibeRating },
+                    { label: "Vibe Rating", rating: restaurant.rating.vibeRating }
                 ].map(({ label, rating }, index) => (
                     <Stack
                         direction="row"
@@ -59,36 +75,26 @@ const RestaurantCard = ({ restaurant, averageRating, handleDeleteRestaurant, rat
                         justifyContent="space-between"
                         key={index}
                     >
-                        <Typography variant="body1" sx={{ fontFamily: "'Roboto', sans-serif" }}>
+                        <StyledLabel variant="body1">
                             <strong>{label}:</strong>
-                        </Typography>
+                        </StyledLabel>
                         {renderStars(rating)}
                     </Stack>
                 ))}
             </Stack>
 
-            {rateOwner && <Typography
-                sx={{
-                    fontFamily: "'Roboto', sans-serif",
-                    marginBottom: "16px",
-                }}
-            >
+            {rateOwner && <StyledRatedBy>
                 Rated By: {rateOwner}
-            </Typography>}
+            </StyledRatedBy>}
 
-            {handleDeleteRestaurant && <Button
+            {handleDeleteRestaurant && <StyledButton
                 variant="contained"
                 color="error"
                 onClick={() => handleDeleteRestaurant(restaurant.id)}
-                sx={{
-                    marginTop: "16px",
-                    width: "100%",
-                    fontFamily: "'Roboto', sans-serif",
-                }}
             >
                 Delete Restaurant
-            </Button>}
-        </Box>
+            </StyledButton>}
+        </StyledCard>
     );
 };
 

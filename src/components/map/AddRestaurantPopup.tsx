@@ -10,6 +10,7 @@ import {
     Stack,
     Typography
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 export interface AddRestaurantInterface {
     name: string;
@@ -27,6 +28,10 @@ interface AddRestaurantPopupProps {
     onClose: () => void;
     onSubmit: (restaurant: AddRestaurantInterface) => void;
 }
+
+const ActionStack = styled(Stack)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+}));
 
 const AddRestaurantPopup = ({ open, onClose, onSubmit, location }: AddRestaurantPopupProps) => {
     const [name, setName] = useState<string>("");
@@ -117,14 +122,14 @@ const AddRestaurantPopup = ({ open, onClose, onSubmit, location }: AddRestaurant
                     </Box>
 
                     {/* Action Buttons */}
-                    <Stack direction="row" justifyContent="space-between" sx={{ mt: 2 }}>
+                    <ActionStack direction="row" justifyContent="space-between">
                         <Button variant="text" color="secondary" onClick={onClose}>
                             Cancel
                         </Button>
                         <Button variant="contained" color="primary" onClick={handleSubmit}>
                             Add
                         </Button>
-                    </Stack>
+                    </ActionStack>
                 </Stack>
             </DialogContent>
         </Dialog>

@@ -1,9 +1,7 @@
-import "./Sidebar.css";
-
 import { Box, Typography, Button } from '@mui/material';
 import FriendsAccordion from "./FriendsAccordion";
 import { useNavigate } from "react-router-dom";
-
+import { styled } from '@mui/material/styles';
 
 interface SideBarProps {
     friendships: FriendInfo[];
@@ -12,8 +10,29 @@ interface SideBarProps {
     handleAddFriendship: (friendEmail: string) => void;
 }
 
-const Sidebar = ({ friendships, selectedFriendsRestaurants, handleAddOrRemoveFriendRestaurant, handleAddFriendship }: SideBarProps) => {
+const StyledSidebar = styled(Box)(({ theme }) => ({
+    width: 250,
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    padding: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    direction: 'ltr',
+}));
 
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    textAlign: 'center',
+    marginBottom: theme.spacing(4),
+    color: theme.palette.text.primary,
+}));
+
+const StyledAboutButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.text.primary,
+    marginBottom: theme.spacing(2),
+    textTransform: 'none',
+}));
+
+const Sidebar = ({ friendships, selectedFriendsRestaurants, handleAddOrRemoveFriendRestaurant, handleAddFriendship }: SideBarProps) => {
     const navigate = useNavigate();
 
     const handleAboutClick = () => {
@@ -21,10 +40,10 @@ const Sidebar = ({ friendships, selectedFriendsRestaurants, handleAddOrRemoveFri
     }
 
     return (
-        <Box sx={{ width: 250, backgroundColor: '#2C3E50', color: 'white', padding: 2, display: 'flex', flexDirection: 'column', direction: 'ltr' }}>
-            <Typography variant="h6" gutterBottom sx={{ textAlign: 'center', marginBottom: 4 }}>
+        <StyledSidebar>
+            <StyledTitle variant="h6" gutterBottom>
                 ATE
-            </Typography>
+            </StyledTitle>
 
             <FriendsAccordion
                 friendships={friendships}
@@ -33,14 +52,13 @@ const Sidebar = ({ friendships, selectedFriendsRestaurants, handleAddOrRemoveFri
                 handleAddFriendship={handleAddFriendship}
             />
 
-            <Button
+            <StyledAboutButton
                 variant="text"
-                sx={{ color: 'white', marginBottom: 2, textTransform: 'none' }}
                 onClick={handleAboutClick}
             >
                 About
-            </Button>
-        </Box>
+            </StyledAboutButton>
+        </StyledSidebar>
     );
 };
 
